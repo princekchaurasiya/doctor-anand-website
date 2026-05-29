@@ -1,0 +1,6 @@
+# PHP is intentionally not managed by mise in this project (see README).
+# The former `ubi:adwinying/php` static build can crash with SIGILL on some CPUs.
+# Use distro PHP 8.4+ (`apt install php8.4-cli`, …); composer.json requires ^8.4.
+
+[settings]
+disable_tools = ["php"]

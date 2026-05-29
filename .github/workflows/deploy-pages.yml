@@ -1,0 +1,70 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      APP_URL: https://princekchaurasiya.github.io/doconnect-react-website
+      ASSET_URL: https://princekchaurasiya.github.io/doconnect-react-website
+      STATIC_BASE_PATH: /doconnect-react-website
+      APP_ENV: production
+      APP_DEBUG: "false"
+      GITHUB_PAGES: "true"
+      GITHUB_REPOSITORY: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, xml, curl, zip, sqlite3
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+          touch database/database.sqlite
+          php artisan migrate --force --no-interaction
+          php artisan db:seed --force --no-interaction
+          php artisan storage:link --force
+
+      - name: Build frontend for GitHub Pages
+        run: npm ci && npm run build:pages
+
+      - name: Export static HTML
+        run: |
+          php artisan serve --host=127.0.0.1 --port=8000 --no-reload &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8000/up >/dev/null && break
+            sleep 1
+          done
+          php artisan site:export-static --base-url=http://127.0.0.1:8000
+
+      - name: Deploy to gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: static-export
+          branch: gh-pages
+          clean: true
+          single-commit: true

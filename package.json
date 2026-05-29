@@ -1,0 +1,29 @@
+{
+    "$schema": "https://www.schemastore.org/package.json",
+    "name": "mumbai-home-visit",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "build:pages": "GITHUB_PAGES=true vite build",
+        "dev": "vite"
+    },
+    "dependencies": {
+        "@inertiajs/react": "^2.0.0",
+        "lucide-react": "^1.14.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.18",
+        "@types/react-dom": "^18.3.5",
+        "@vitejs/plugin-react": "^4.3.4",
+        "autoprefixer": "^10.4.20",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.1.0",
+        "postcss": "^8.4.49",
+        "tailwindcss": "^3.4.17",
+        "typescript": "^5.7.2",
+        "vite": "^6.4.2"
+    }
+}
