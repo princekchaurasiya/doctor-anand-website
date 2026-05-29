@@ -28,8 +28,8 @@ export default function Testimonials({ testimonials }: Props) {
   return (
     <MainLayout>
       <div className="container" style={{ padding: '1.5rem 1.25rem 3rem' }}>
-      <Head title="Testimonials | Doconnect" />
-      <PageHeader title="Testimonials" subtitle="What our clients say about Doconnect." />
+      <Head title="Testimonials | Satatva Health" />
+      <PageHeader title="Testimonials" subtitle="What our patients say about Satatva Health." />
       {items.length === 0 ? (
         <p style={{ color: 'var(--color-muted)' }}>Testimonials will appear here soon.</p>
       ) : (

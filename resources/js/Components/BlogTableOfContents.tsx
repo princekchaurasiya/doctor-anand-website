@@ -1,10 +1,12 @@
 import { ChevronRight, CircleHelp, ListTree, Sparkles } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type Props = {
   items: string[];
   slugify: (text: string, index: number) => string;
 };
+
+const SCROLL_OFFSET = 100;
 
 function tocIcon(label: string) {
   const lower = label.toLowerCase();
@@ -17,35 +19,79 @@ function tocIcon(label: string) {
   return ChevronRight;
 }
 
+function indexFromHash(items: string[], slugify: (text: string, index: number) => string): number | null {
+  const hash = window.location.hash.replace(/^#/, '');
+  if (!hash) {
+    return null;
+  }
+  const idx = items.findIndex((text, i) => slugify(text, i) === hash);
+  return idx >= 0 ? idx : null;
+}
+
 export function BlogTableOfContents({ items, slugify }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const scrollLockUntilRef = useRef(0);
 
-  useEffect(() => {
-    const ids = items.map((text, i) => slugify(text, i));
-    const headings = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => el !== null);
+  const headingElements = useCallback((): HTMLElement[] => {
+    return items
+      .map((text, i) => document.getElementById(slugify(text, i)))
+      .filter((el): el is HTMLElement => el !== null);
+  }, [items, slugify]);
+
+  const updateActiveFromScroll = useCallback(() => {
+    const headings = headingElements();
     if (headings.length === 0) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible.length > 0) {
-          const idx = headings.indexOf(visible[0].target as HTMLElement);
-          if (idx >= 0) {
-            setActiveIndex(idx);
-          }
-        }
-      },
-      { rootMargin: '-15% 0px -65% 0px', threshold: 0 }
-    );
+    const scrollPosition = window.scrollY + SCROLL_OFFSET;
+    let next = 0;
 
-    headings.forEach((h) => observer.observe(h));
+    for (let i = 0; i < headings.length; i++) {
+      if (headings[i].offsetTop <= scrollPosition) {
+        next = i;
+      }
+    }
 
-    return () => observer.disconnect();
-  }, [items, slugify]);
+    setActiveIndex(next);
+  }, [headingElements]);
+
+  useEffect(() => {
+    const fromHash = indexFromHash(items, slugify);
+    if (fromHash !== null) {
+      setActiveIndex(fromHash);
+    }
+
+    const onScroll = () => updateActiveFromScroll();
+    const onHashChange = () => {
+      const idx = indexFromHash(items, slugify);
+      if (idx !== null) {
+        setActiveIndex(idx);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('hashchange', onHashChange);
+    updateActiveFromScroll();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('hashchange', onHashChange);
+    };
+  }, [items, slugify, updateActiveFromScroll]);
+
+  function scrollToSection(index: number) {
+    const id = slugify(items[index], index);
+    const el = document.getElementById(id);
+    if (!el) {
+      return;
+    }
+
+    scrollLockUntilRef.current = Date.now() + 900;
+    setActiveIndex(index);
+    window.history.replaceState(null, '', `#${id}`);
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   return (
     <nav aria-label="Table of contents" className="blog-toc-sidebar">
@@ -68,7 +114,15 @@ export function BlogTableOfContents({ items, slugify }: Props) {
 
           return (
             <li key={`${item}-${i}`} className={isActive ? 'blog-toc-item is-active' : 'blog-toc-item'}>
-              <a href={`#${slugify(item, i)}`} className="blog-toc-link">
+              <a
+                href={`#${slugify(item, i)}`}
+                className="blog-toc-link"
+                aria-current={isActive ? 'location' : undefined}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(i);
+                }}
+              >
                 <span className="blog-toc-num" aria-hidden>
                   {i + 1}
                 </span>

@@ -1,6 +1,6 @@
 {
     "$schema": "https://www.schemastore.org/package.json",
-    "name": "mumbai-home-visit",
+    "name": "satatva-health",
     "private": true,
     "type": "module",
     "scripts": {

@@ -3,11 +3,12 @@
 namespace Database\Seeders;
 
 /**
- * Expands seeded blog HTML to long-form educational content for Doconnect.
+ * Expands seeded blog HTML to long-form educational content for Satatva Health.
  */
 final class BlogLongBodyGenerator
 {
-    private const TARGET_WORDS = 1500;
+    /** Minimum plain-text length for seeded blog articles. */
+    public const MIN_CHARS = 2000;
 
     /**
      * @param  array{title: string, category: string, excerpt: string, body: string, slug: string}  $post
@@ -19,14 +20,21 @@ final class BlogLongBodyGenerator
         $excerpt = e($post['excerpt']);
         $slug = $post['slug'];
 
-        $intro = $post['body'];
+        $intro = self::stripLeadingH1($post['body']);
 
         $sections = self::sections($title, $category, $excerpt, $slug);
-        $html = '<h1>'.$title.'</h1>'.$intro.implode('', $sections);
+        $html = '<h1>'.$title.'</h1>'.$intro;
+
+        foreach ($sections as $section) {
+            $html .= $section;
+            if (self::plainTextLength($html) >= self::MIN_CHARS) {
+                break;
+            }
+        }
 
         $pool = self::extraParagraphPool($title, $category);
         $i = abs(crc32($slug)) % count($pool);
-        while (self::wordCount($html) < self::TARGET_WORDS) {
+        while (self::plainTextLength($html) < self::MIN_CHARS) {
             $html .= $pool[$i % count($pool)];
             $i++;
             if ($i > 200) {
@@ -34,22 +42,38 @@ final class BlogLongBodyGenerator
             }
         }
 
-        return $html.self::faqSection($title).self::closingBlock($title);
+        $html .= self::faqSection($title).self::closingBlock($title);
+
+        return $html;
+    }
+
+    public static function plainTextLength(string $html): int
+    {
+        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return strlen(trim($text));
+    }
+
+    private static function stripLeadingH1(string $html): string
+    {
+        $stripped = preg_replace('/<h1[^>]*>.*?<\/h1>\s*/is', '', $html, 1);
+
+        return $stripped ?? $html;
     }
 
     private static function faqSection(string $title): string
     {
         return '<h2>Frequently Asked Questions</h2>'
-            .'<h3>Does <strong>Doconnect</strong> replace the emergency department?</h3>'
-            .self::para('No. For chest pain, stroke symptoms, severe bleeding, or trouble breathing, use emergency services. Home visits complement planned and stable urgent assessments.')
+            .'<h3>Does <strong>Satatva Health</strong> replace the emergency department?</h3>'
+            .self::para('No. For chest pain, stroke symptoms, severe bleeding, or trouble breathing, use emergency services. Clinic-based surgical care complements emergency services for planned procedures and follow-up.')
             .'<h3>Who benefits most from topics like <em>'.$title.'</em>?</h3>'
-            .self::para('Mumbai families managing chronic illness, post-operative recovery, limited mobility, or crowded schedules often gain the most when care comes home with clear documentation.')
-            .'<h3>How do I book a home visit?</h3>'
-            .self::para('Call Doconnect on +91 84248 45423 or use the <a href="/contact">contact page</a> to request a callback with your area and preferred timing.')
+            .self::para('Patients in Mumbai with surgical concerns — piles, fistula, hernia, gallbladder stones, and similar conditions — benefit from early specialist evaluation at Satatv Clinic.')
+            .'<h3>How do I book a consultation?</h3>'
+            .self::para('Call Satatva Health on +91 8286214707 or use the <a href="/contact">contact page</a> to request an appointment at Satatv Clinic, Kandivali West.')
             .'<h3>Is this article personalised medical advice?</h3>'
             .self::para('No. It is educational. Always follow instructions from your treating clinician when they differ from general guidance online.')
-            .'<h3>What should I prepare before the clinician arrives?</h3>'
-            .self::para('Keep identification, medication lists, recent reports, and a quiet, well-lit area for examination. See our <a href="/services">services</a> overview for what Doconnect can provide at home.');
+            .'<h3>What should I bring to my appointment?</h3>'
+            .self::para('Bring identification, medication lists, and recent reports or imaging. See our <a href="/services">services</a> overview for conditions treated at Satatv Clinic.');
     }
 
     private static function wordCount(string $html): int
@@ -61,7 +85,7 @@ final class BlogLongBodyGenerator
 
     private static function emphasize(string $text): string
     {
-        $text = preg_replace('/\b(Doconnect)\b/u', '<strong>$1</strong>', $text) ?? $text;
+        $text = preg_replace('/\b(Satatva Health)\b/u', '<strong>$1</strong>', $text) ?? $text;
         $text = preg_replace('/“([^”]+)”/u', '<em>$1</em>', $text) ?? $text;
 
         return $text;
@@ -80,27 +104,27 @@ final class BlogLongBodyGenerator
         $seed = crc32($slug);
 
         return [
-            '<h2>Why this topic matters for Mumbai families</h2>'
+            '<h2>Why this topic matters for patients in Mumbai</h2>'
             .self::para(self::p1($title, $category, $excerpt))
             .self::para(self::p2($title, $category)),
 
-            '<h2>How home-based care fits into a larger care plan</h2>'
+            '<h2>How clinic-based surgical care supports recovery</h2>'
             .self::para(self::p3($title))
             .self::para(self::p4($category, $seed)),
 
-            '<h2>What to expect before the clinician arrives</h2>'
+            '<h2>What to expect before your appointment</h2>'
             .self::para(self::p5($title))
             .self::para(self::p6()),
 
-            '<h2>During the visit: assessment, explanation, and next steps</h2>'
+            '<h2>During consultation: assessment, explanation, and next steps</h2>'
             .self::para(self::p7($title, $category))
             .self::para(self::p8($seed)),
 
-            '<h2>Safety, documentation, and continuity after the visit</h2>'
+            '<h2>Safety, documentation, and follow-up after treatment</h2>'
             .self::para(self::p9($title))
             .self::para(self::p10()),
 
-            '<h2>Older adults, chronic illness, and recovery at home</h2>'
+            '<h2>Chronic conditions, older adults, and post-operative care</h2>'
             .self::para(self::p11($category))
             .self::para(self::p12($title)),
 
@@ -108,7 +132,7 @@ final class BlogLongBodyGenerator
             .self::para(self::p13())
             .self::para(self::p14($title, $seed)),
 
-            '<h2>Costs, time windows, and realistic expectations</h2>'
+            '<h2>Costs, scheduling, and realistic expectations</h2>'
             .self::para(self::p15($excerpt))
             .self::para(self::p16()),
 
@@ -132,13 +156,13 @@ final class BlogLongBodyGenerator
             .'<li>Plan hydration, meals, and rest before the visit so vitals reflect a typical day where possible.</li>'
             .'</ul>',
 
-            '<h2>Questions worth asking Doconnect about “'.$title.'”</h2>'
+            '<h2>Questions worth asking Satatva Health about “'.$title.'”</h2>'
             .'<ol>'
             .'<li>Which symptoms can be safely assessed at home in my situation, and which cannot?</li>'
             .'<li>What equipment or supplies should I arrange before the visit?</li>'
             .'<li>How will my primary doctor or specialist receive the visit summary?</li>'
             .'<li>What follow-up timeline should I expect if symptoms change overnight?</li>'
-            .'<li>How does Doconnect coordinate if hospital admission becomes necessary?</li>'
+            .'<li>How does Satatva Health coordinate if hospital admission becomes necessary?</li>'
             .'</ol>',
         ];
     }
@@ -148,14 +172,14 @@ final class BlogLongBodyGenerator
         return "Across Mumbai, families increasingly choose structured home medical support because travel, traffic, and long clinic queues can delay timely assessment. "
             ."This article focuses on “{$title}” under the broader theme of {$category}. "
             ."In plain terms: {$excerpt} "
-            .'Doconnect’s approach is to combine clinical rigour with practical logistics—clear communication, documented plans, and explicit escalation pathways when home management is not enough.';
+            .'Satatva Health’s approach is to combine clinical rigour with practical logistics—clear communication, documented plans, and explicit escalation pathways when home management is not enough.';
     }
 
     private static function p2(string $title, string $category): string
     {
         return "When you read about {$title}, it helps to separate three layers: what science broadly supports for similar situations, what is appropriate for your specific diagnosis and prescriptions, and what can realistically be delivered safely in a home environment. "
             ."Categories such as {$category} often span multiple scenarios, so a responsible provider will ask focused questions, examine as needed, and avoid one-size-fits-all promises. "
-            .'Doconnect prioritises transparency: if a concern needs emergency care, advanced imaging, or a procedure suite, the team will say so early rather than risking a delayed referral.';
+            .'Satatva Health prioritises transparency: if a concern needs emergency care, advanced imaging, or a procedure suite, the team will say so early rather than risking a delayed referral.';
     }
 
     private static function p3(string $title): string
@@ -173,7 +197,7 @@ final class BlogLongBodyGenerator
 
         return "Within {$category}, continuity is a competitive advantage: fewer contradictory instructions, fewer duplicated tests, and clearer accountability. "
             .$extra
-            .' Doconnect aims to document each encounter in language you can understand, while retaining enough clinical detail for other providers to act on the same day if needed.';
+            .' Satatva Health aims to document each encounter in language you can understand, while retaining enough clinical detail for other providers to act on the same day if needed.';
     }
 
     private static function p5(string $title): string
@@ -207,13 +231,13 @@ final class BlogLongBodyGenerator
 
         return 'After examination, you should receive a clear explanation in plain language, a written or digital summary, and a follow-up window. '
             .$line
-            .' Doconnect encourages patients and families to repeat back the plan in their own words—research shows this reduces misunderstandings dramatically.';
+            .' Satatva Health encourages patients and families to repeat back the plan in their own words—research shows this reduces misunderstandings dramatically.';
     }
 
     private static function p9(string $title): string
     {
         return "Safety does not end when the doctor leaves. Topics such as {$title} often require monitoring charts, warning symptoms, and a defined escalation route. "
-            .'Doconnect supports families by documenting vitals targets where relevant, wound-care intervals when applicable, and criteria for calling back versus going to the emergency department. '
+            .'Satatva Health supports families by documenting vitals targets where relevant, wound-care intervals when applicable, and criteria for calling back versus going to the emergency department. '
             .'If you are unsure whether a symptom is “urgent enough,” err on the side of calling—clinicians prefer early questions to late collapses.';
     }
 
@@ -228,7 +252,7 @@ final class BlogLongBodyGenerator
     {
         return "Elderly patients and those with chronic diseases often need slower pacing, more repetition, and explicit fall-prevention advice—especially in {$category} scenarios. "
             .'Home visits can identify hazards like loose rugs, poor night lighting, and bathroom obstacles that contribute to injuries. '
-            .'They can also uncover caregiver fatigue, which is a risk factor for medication errors. Doconnect clinicians routinely ask who bears the overnight burden and whether respite support exists.';
+            .'They can also uncover caregiver fatigue, which is a risk factor for medication errors. Satatva Health clinicians routinely ask who bears the overnight burden and whether respite support exists.';
     }
 
     private static function p12(string $title): string
@@ -243,7 +267,7 @@ final class BlogLongBodyGenerator
         return 'Laboratory tests and imaging are not “extras”—they are tools that must be chosen for a reason. '
             .'When a home clinician orders tests, ask what decision will change based on the result and how quickly results arrive. '
             .'For many Mumbai patients, home phlebotomy reduces missed appointments; for others, near-hospital testing remains safer if instability is possible. '
-            .'Doconnect can help map the least burdensome pathway without compromising diagnostic quality.';
+            .'Satatva Health can help map the least burdensome pathway without compromising diagnostic quality.';
     }
 
     private static function p14(string $title, int $seed): string
@@ -266,7 +290,7 @@ final class BlogLongBodyGenerator
     private static function p16(): string
     {
         return 'Time windows matter in a dense city: traffic, festivals, and monsoon flooding can shift realistic arrival times. '
-            .'Doconnect sets expectations honestly because over-promising arrival minutes erodes trust. '
+            .'Satatva Health sets expectations honestly because over-promising arrival minutes erodes trust. '
             .'If you are booking for an elderly relative, confirm that someone who knows the patient’s baseline will be present—not only a domestic helper who cannot authorise decisions.';
     }
 
@@ -287,7 +311,7 @@ final class BlogLongBodyGenerator
     {
         return 'Go to the emergency department immediately for crushing chest pain, sudden weakness on one side, slurred speech, severe shortness of breath at rest, uncontrolled bleeding, altered consciousness, or major trauma. '
             .'If you are unsure but the symptom feels “thunderclap” new and severe, choose the emergency department. '
-            .'Doconnect will support you after stabilisation, but no blog post replaces emergency services for those patterns.';
+            .'Satatva Health will support you after stabilisation, but no blog post replaces emergency services for those patterns.';
     }
 
     private static function p20(string $title): string
@@ -303,7 +327,7 @@ final class BlogLongBodyGenerator
     private static function extraParagraphPool(string $title, string $category): array
     {
         return [
-            '<p>Doconnect serves Mumbai households with a focus on respectful communication, punctuality where traffic allows, and clear escalation when home management is insufficient.</p>',
+            '<p>Satatva Health serves Mumbai households with a focus on respectful communication, punctuality where traffic allows, and clear escalation when home management is insufficient.</p>',
             '<p>Privacy matters: discuss sensitive topics only with people the patient wants in the room, and ask clinicians how visit notes are stored and shared.</p>',
             '<p>Infection control at home includes hand hygiene, clean surfaces for procedures, and safe disposal of sharps when injections are part of care.</p>',
             '<p>If the patient has multiple languages in the household, confirm that key instructions are understood—miscommunication is a preventable source of harm.</p>',
@@ -331,8 +355,8 @@ final class BlogLongBodyGenerator
     private static function closingBlock(string $title): string
     {
         return '<h2>Final note</h2>'
-            .self::para('If you want personalised guidance related to '.$title.', call Doconnect on +91 84248 45423. '
+            .self::para('If you want personalised guidance related to '.$title.', call Satatva Health on +91 8286214707. '
             .'This article is educational and not a substitute for an in-person clinical assessment tailored to your history, examination, and investigations.')
-            .'<div class="cta-section"><p>Book a <strong>doctor home visit in Mumbai</strong>: call <strong>+91 84248 45423</strong> or <a href="/contact">request a callback</a> from <strong>Doconnect</strong> today.</p></div>';
+            .'<div class="cta-section"><p>Book a <strong>consultation at Satatv Clinic, Kandivali West</strong>: call <strong>+91 8286214707</strong> or <a href="/contact">request an appointment</a> with <strong>Satatva Health</strong> today.</p></div>';
     }
 }

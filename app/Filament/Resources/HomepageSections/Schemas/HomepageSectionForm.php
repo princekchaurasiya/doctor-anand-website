@@ -25,7 +25,7 @@ class HomepageSectionForm
                                 'about' => 'About',
                                 'how_it_works' => 'How it works',
                                 'capabilities' => 'Capabilities',
-                                'who_needs' => 'Who needs home visits',
+                                'who_needs' => 'Who should visit',
                             ])
                             ->required()
                             ->unique(ignoreRecord: true)

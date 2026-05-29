@@ -28,10 +28,10 @@ export default function Faqs({ faqs }: Props) {
   return (
     <MainLayout>
       <div className="container" style={{ padding: '1.5rem 1.25rem 3rem' }}>
-      <Head title="FAQs | Doconnect" />
+      <Head title="FAQs | Satatva Health" />
       <PageHeader
         title="Frequently asked questions"
-        subtitle="Answers about booking and home visit services in Mumbai."
+        subtitle="Answers about appointments, services, and care at Satatv Clinic, Kandivali West."
       />
       {items.length === 0 ? (
         <p style={{ color: 'var(--color-muted)' }}>FAQs will appear here soon.</p>

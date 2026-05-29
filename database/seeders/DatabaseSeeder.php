@@ -27,96 +27,84 @@ class DatabaseSeeder extends Seeder
         );
 
         /** @var list<array{title: string, slug: string, short_description: string, body: string, sort_order: int}> $serviceRows */
-        $serviceRows = require __DIR__.'/data/doconnect_services.php';
+        $serviceRows = require __DIR__.'/data/services.php';
         $this->writePlaceholderMedia($serviceRows);
 
         SiteSetting::query()->updateOrCreate(
             ['id' => 1],
             [
-                'site_name' => 'Doconnect',
-                'tagline' => 'Expert doctor for home visit — fast, reliable, personalised healthcare at home in Mumbai.',
-                'meta_title' => 'Doconnect | Doctor home visit & on-call care Mumbai',
-                'meta_description' => 'Doconnect brings doctor home visits, nursing, urgent support, IV therapy, wound care, labs, and more to Mumbai. Call +91 84248 45423 — 24×7 desk.',
-                'phone' => '+91 84248 45423',
-                'whatsapp' => '+91 84248 45423',
-                'email' => 'info@doconnect.org',
-                'address_line' => 'Serving Mumbai — Versova, Andheri, Andheri West, Four Bungalow, Goregaon, Jogeshwari, Malad, Oshiwara, Ram Mandir, Santacruz, and nearby areas.',
-                'service_areas' => "Doctor for home visit in Andheri, Andheri West, Four Bungalow, Goregaon, Jogeshwari, Malad, Mumbai, Oshiwara, Ram Mandir, Santacruz, Versova, and surrounding neighbourhoods. Call to confirm coverage for your pin code.",
+                'site_name' => 'Satatva Health',
+                'tagline' => 'Expert surgical care by Dr. Anand S. Prajapati — General Surgeon, Ano-Proctologist & Laser Surgeon at Satatv Clinic, Kandivali West, Mumbai.',
+                'meta_title' => 'Satatva Health | Dr. Anand S. Prajapati — General & Laser Surgeon Mumbai',
+                'meta_description' => 'Satatva Health at Satatv Clinic offers piles, fistula, fissure, hernia, gallbladder, hydrocele, and general surgery by Dr. Anand S. Prajapati, M.S. Call +91 8286214707.',
+                'phone' => '+91 8286214707',
+                'whatsapp' => '+91 8286214707',
+                'email' => 'prajapatianand2044@gmail.com',
+                'address_line' => 'Goyal Aspire, 104, 1st Floor, Near Atul Tower, Mathuradas Ext Road, Kandivali West, Mumbai — 400 067.',
+                'service_areas' => 'Satatv Clinic (सातत्व क्लिनिक), Kandivali West, Mumbai. Consultations and procedures at the clinic — not home visits.',
                 'og_image_path' => 'seed/site/og.svg',
                 'frontend_public_url' => config('app.url'),
-                'open_hours' => '24 × 7',
+                'open_hours' => 'Mon–Sat: 10:00 AM – 8:00 PM',
                 'stats' => [
-                    ['label' => 'Home visits completed', 'value' => '2,500+'],
-                    ['label' => 'Successful doctor consultations', 'value' => '4,800+'],
-                    ['label' => 'Chronic care patients managed at home', 'value' => '1,200+'],
-                    ['label' => 'Urgent care home visits completed', 'value' => '900+'],
+                    ['label' => 'Years of surgical experience', 'value' => '10+'],
+                    ['label' => 'Procedures performed', 'value' => '3,000+'],
+                    ['label' => 'Laser proctology cases', 'value' => '1,500+'],
+                    ['label' => 'Happy patients', 'value' => '2,500+'],
                 ],
                 'testimonials' => [
                     [
-                        'name' => 'Ramesh Dhoklam',
-                        'quote' => 'Everything was arranged quickly and easily. The customer service was excellent, and I got the help I needed without delay.',
+                        'name' => 'Rajesh M.',
+                        'quote' => 'Dr. Prajapati explained my piles treatment clearly. The laser procedure was smooth and recovery was faster than I expected.',
                     ],
                     [
-                        'name' => 'Prince Chaurasiya',
-                        'quote' => 'The booking process was straightforward. I secured my appointments without any issues. Highly satisfied!',
+                        'name' => 'Priya S.',
+                        'quote' => 'Professional, caring, and thorough. The clinic is clean and well organised. Highly recommend Satatva Health for surgical care.',
                     ],
                     [
-                        'name' => 'Shashank Sinha',
-                        'quote' => 'I was impressed by the care and professionalism shown by Doconnect. They were always available to answer my questions and ensure everything went smoothly.',
+                        'name' => 'Amit K.',
+                        'quote' => 'I had a hernia repair done here. Dr. Anand was reassuring throughout and the follow-up care was excellent.',
                     ],
                     [
-                        'name' => 'Jayesh Patel',
-                        'quote' => 'I had a fantastic experience with Doconnect! Booking a doctor for a home visit was quick, and arranging lab tests was hassle-free.',
+                        'name' => 'Sneha P.',
+                        'quote' => 'My father\'s fistula treatment was handled with great expertise. We felt informed and supported at every step.',
                     ],
                     [
-                        'name' => 'Vijay Gore',
-                        'quote' => 'The Doconnect team was incredibly helpful. Their service exceeded my expectations, and I highly recommend it for anyone needing medical assistance.',
+                        'name' => 'Vikram D.',
+                        'quote' => 'Clear diagnosis, honest advice, and skilled surgery for my gallbladder stones. Thank you to the entire Satatv Clinic team.',
                     ],
                 ],
                 'faqs' => [
                     [
-                        'question' => 'How can I book a home visit for a doctor in Mumbai?',
-                        'answer' => 'Call or WhatsApp +91 84248 45423 with the patient’s location, symptoms, and urgency. Our desk will propose a time window and what to keep ready (reports, medication list).',
+                        'question' => 'How do I book an appointment at Satatv Clinic?',
+                        'answer' => 'Call or WhatsApp +91 8286214707, or use the contact form on this website. Share your symptoms and any prior reports so we can schedule the right consultation.',
                     ],
                     [
-                        'question' => 'Can I request nebulisation at home in Mumbai?',
-                        'answer' => 'Yes, when clinically appropriate and aligned with your treating doctor’s plan. Our team carries standard equipment and will advise if hospital care is safer.',
+                        'question' => 'Does Satatva Health offer home visits?',
+                        'answer' => 'No. All consultations and procedures take place at Satatv Clinic, Goyal Aspire, Kandivali West, Mumbai. We do not provide home-visit services.',
                     ],
                     [
-                        'question' => 'How can I arrange injection administration at home?',
-                        'answer' => 'Share the prescription and last dose timing. A clinician visits with supplies and documents the dose; controlled drugs follow legal and safety rules.',
+                        'question' => 'What conditions does Dr. Anand S. Prajapati treat?',
+                        'answer' => 'Piles, fissure, fistula, pilonidal sinus, hernia, gallbladder stones, hydrocele, phimosis, appendix, lipoma, sebaceous cyst, abscess, diabetic foot, varicose veins, and other general surgical conditions.',
                     ],
                     [
-                        'question' => 'Do you offer wound care during home visits?',
-                        'answer' => 'We provide dressing changes and wound review when suitable for home. Complex or infected wounds may need hospital referral.',
+                        'question' => 'Is laser surgery available for piles and fistula?',
+                        'answer' => 'Yes. Dr. Prajapati is a Consultant Ano-Proctologist & Laser Surgeon and offers modern laser and minimally invasive options where clinically appropriate.',
                     ],
                     [
-                        'question' => 'Can you assess severe abdominal pain at home?',
-                        'answer' => 'We can examine and stabilise where safe, with clear escalation to emergency care if red flags are present.',
+                        'question' => 'What should I bring to my first visit?',
+                        'answer' => 'Bring a valid ID, list of current medications, previous surgical or pathology reports, and any recent blood tests or imaging (ultrasound, CT, etc.) related to your condition.',
                     ],
                     [
-                        'question' => 'Is relief for shivering or fever available through home visits?',
-                        'answer' => 'Yes—assessment, hydration advice, nebulisation or medications as prescribed, and guidance on when to move to the ER.',
+                        'question' => 'Where is Satatv Clinic located?',
+                        'answer' => 'Goyal Aspire, 104, 1st Floor, Near Atul Tower, Mathuradas Ext Road, Kandivali West, Mumbai — 400 067.',
                     ],
                     [
-                        'question' => 'Can you treat high-grade fever at home?',
-                        'answer' => 'We assess cause and severity, start supportive care per protocol, and coordinate tests or admission if needed.',
+                        'question' => 'Do you accept health insurance?',
+                        'answer' => 'Insurance coverage depends on your policy and the planned procedure. Please bring your insurance card and we will guide you on documentation and cashless options where applicable.',
                     ],
                     [
-                        'question' => 'Do you offer IV fluid therapy during home visits?',
-                        'answer' => 'When prescribed and safe at home, our team can administer IV fluids with monitoring and discharge instructions.',
-                    ],
-                    [
-                        'question' => 'Can small stitches be done at home?',
-                        'answer' => 'Minor, clean lacerations may be closed at home if appropriate. Deep, contaminated, or facial wounds may be referred.',
-                    ],
-                    [
-                        'question' => 'Can urethral catheterisation be done at home?',
-                        'answer' => 'Only when clinically indicated, with sterile technique and follow-up plan. Some cases belong in hospital.',
-                    ],
-                    [
-                        'question' => 'Is home consultation available across Mumbai?',
-                        'answer' => 'We serve listed western and central Mumbai neighbourhoods; confirm coverage for your pin code when you call.',
+                        'question' => 'What are the clinic timings?',
+                        'answer' => 'Monday to Saturday, 10:00 AM to 8:00 PM. Call ahead to confirm availability for your preferred time slot.',
                     ],
                 ],
             ]
@@ -125,41 +113,41 @@ class DatabaseSeeder extends Seeder
         $sections = [
             [
                 'section_key' => 'hero',
-                'heading' => 'Expert doctor for home visit',
-                'subheading' => 'Fast, reliable, and personalised healthcare at home — for general illness, elderly care, bedridden patients, and chronic conditions across Mumbai.',
-                'body' => 'Skip long queues and travel. Doconnect brings experienced clinicians to your door with clear plans, honest escalation, and follow-up you can count on.',
+                'heading' => 'Dr. Anand S. Prajapati',
+                'subheading' => 'M.S. (General Surgeon) · Consultant Ano-Proctologist & Laser Surgeon · Satatv Clinic, Kandivali West, Mumbai.',
+                'body' => 'Expert surgical care for piles, fistula, fissure, hernia, gallbladder stones, hydrocele, and general surgery — with modern laser and minimally invasive techniques.',
                 'sort_order' => 0,
                 'image_path' => 'seed/homepage/hero.svg',
             ],
             [
                 'section_key' => 'about',
-                'heading' => 'About Doconnect',
-                'subheading' => 'Healthcare that meets you where you are.',
-                'body' => "Welcome to Doconnect — we redefine care by bringing it home. Our mission is accessible, quality medical attention through doctor-for-home-visit services.\n\nWhether you manage chronic illness, recover from surgery, or need a routine check-up, our doctors help you heal comfortably. Forget long wait times: get the visit you need on your schedule.",
+                'heading' => 'About Satatva Health',
+                'subheading' => 'Quality surgical care at Satatv Clinic.',
+                'body' => "Welcome to Satatva Health — the practice of Dr. Anand S. Prajapati at Satatv Clinic (सातत्व क्लिनिक), Kandivali West.\n\nWe specialise in proctology, laser surgery, and general surgical procedures. Every patient receives a clear diagnosis, honest treatment options, and structured follow-up until recovery.",
                 'sort_order' => 10,
                 'image_path' => 'seed/homepage/about.svg',
             ],
             [
                 'section_key' => 'how_it_works',
-                'heading' => 'How Doconnect works',
-                'subheading' => 'Straightforward booking. Serious clinical standards.',
-                'body' => "Call us to schedule — we confirm timing, equipment, and any special needs.\n\nOur medical professionals have strong hospital training, including experience with critically ill patients. They specialise in accurate assessment at home, precise diagnosis where appropriate, and treatment plans that improve outcomes — coordinating with hospital teams whenever admission is the safer choice.\n\nWe carry modern tools so you receive hospital-quality attention at your doorstep, plus ongoing care management for chronic and post-discharge needs.",
+                'heading' => 'How to get care',
+                'subheading' => 'Simple steps from consultation to recovery.',
+                'body' => "Call or message us to book a clinic appointment — share your symptoms and any existing reports.\n\nDr. Prajapati examines you at Satatv Clinic, explains diagnosis and treatment options, and plans surgery or medical management as needed.\n\nAfter procedure or treatment, structured follow-up at the clinic ensures proper healing and answers every question along the way.",
                 'sort_order' => 20,
                 'image_path' => null,
             ],
             [
                 'section_key' => 'capabilities',
-                'heading' => 'Comprehensive services we support',
-                'subheading' => 'Examples of what families book with Doconnect.',
-                'body' => "- Nebulisation\n- Sugar (blood glucose) checks\n- Injection administration\n- Dressing / wound care\n- Assessment of severe abdominal pain (with referral when needed)\n- Relief pathways for shivering and fever\n- Treatment planning for high-grade fever\n- IV fluid therapy when prescribed\n- Small stitches when suitable for home\n- Urethral catheterisation when clinically indicated\n- Consultation at home",
+                'heading' => 'Conditions we treat',
+                'subheading' => 'Comprehensive general and proctology surgery at Satatv Clinic.',
+                'body' => "- Piles & laser hemorrhoid treatment\n- Anal fissure & fistula\n- Pilonidal sinus\n- Gallbladder stones (laparoscopic)\n- Hernia repair\n- Hydrocele & varicocele\n- Phimosis & circumcision\n- Appendix surgery\n- Lipoma & sebaceous cyst removal\n- Abscess drainage\n- Diabetic foot care\n- Varicose veins\n- GERD / acidity evaluation\n- Constipation assessment\n- Fibroadenoma removal",
                 'sort_order' => 30,
                 'image_path' => null,
             ],
             [
                 'section_key' => 'who_needs',
-                'heading' => 'Who needs home visits?',
-                'subheading' => 'Built for real Mumbai households.',
-                'body' => "Home visits suit anyone who finds travel difficult — seniors, post-operative recovery, bedridden patients, or busy professionals.\n\nThey are especially helpful for diabetes and other chronic conditions that need regular review without repeated clinic trips.\n\nDoconnect is committed to compassionate, high-quality care tailored to your needs — preventive, chronic, or urgent support with clear guidance every time.",
+                'heading' => 'Who should visit?',
+                'subheading' => 'If you have persistent symptoms, do not delay evaluation.',
+                'body' => "Anyone with anal pain, bleeding, lumps, hernia bulge, gallbladder pain, scrotal swelling, skin lumps, diabetic foot wounds, or other surgical concerns should consult a specialist.\n\nEarly evaluation leads to simpler treatment and better outcomes.\n\nSatatva Health provides clinic-based care only — all visits and procedures are at Satatv Clinic, Kandivali West.",
                 'sort_order' => 40,
                 'image_path' => 'seed/homepage/who-needs.svg',
             ],
@@ -171,6 +159,9 @@ class DatabaseSeeder extends Seeder
                 $row + ['is_published' => true]
             );
         }
+
+        $slugs = array_column($serviceRows, 'slug');
+        Service::query()->whereNotIn('slug', $slugs)->delete();
 
         foreach ($serviceRows as $row) {
             $path = 'seed/services/'.$row['slug'].'.svg';
@@ -184,7 +175,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $this->call(DoconnectBlogPostsSeeder::class);
+        $this->call(BlogPostsSeeder::class);
     }
 
     /**
@@ -192,13 +183,13 @@ class DatabaseSeeder extends Seeder
      */
     private function writePlaceholderMedia(array $services): void
     {
-        SeedPlaceholderMedia::put('seed/site/og.svg', 'Doconnect', '#7a0a18');
-        SeedPlaceholderMedia::put('seed/homepage/hero.svg', 'Doconnect — home visit', '#c8102e');
-        SeedPlaceholderMedia::put('seed/homepage/about.svg', 'About Doconnect', '#9b0d23');
-        SeedPlaceholderMedia::put('seed/homepage/who-needs.svg', 'Who we serve', '#e63950');
+        SeedPlaceholderMedia::put('seed/site/og.svg', 'Satatva Health', '#4A2370');
+        SeedPlaceholderMedia::put('seed/homepage/hero.svg', 'Satatva Health', '#5B2D8C');
+        SeedPlaceholderMedia::put('seed/homepage/about.svg', 'Satatv Clinic', '#6B2FA0');
+        SeedPlaceholderMedia::put('seed/homepage/who-needs.svg', 'Who we treat', '#7B4BA8');
 
         foreach ($services as $i => $svc) {
-            $palette = ['#c8102e', '#9b0d23', '#e63950', '#b30d28', '#d62839', '#a30c20', '#e85d6d', '#8f0a1c', '#7a0a18'];
+            $palette = ['#5B2D8C', '#4A2370', '#7B4BA8', '#6B2FA0', '#8B5FBF', '#3D1F5C', '#9B6FD4', '#E8B923'];
             $path = 'seed/services/'.$svc['slug'].'.svg';
             SeedPlaceholderMedia::put($path, Str::limit($svc['title'], 40), $palette[$i % count($palette)]);
         }

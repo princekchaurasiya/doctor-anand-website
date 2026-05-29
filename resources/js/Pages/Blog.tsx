@@ -35,10 +35,10 @@ export default function Blog({ posts, meta }: Props) {
   return (
     <MainLayout>
       <div className="container" style={{ padding: '1.5rem 1.25rem 3rem' }}>
-        <Head title="Health tips & updates | Mumbai home care">
-          <meta name="description" content="Articles on home healthcare, elderly safety, and Mumbai-focused medical tips." />
+        <Head title="Health articles | Satatva Health">
+          <meta name="description" content="Articles on piles, fistula, hernia, and surgical care from Satatva Health, Kandivali West, Mumbai." />
         </Head>
-        <PageHeader title="Blog" subtitle="Practical guidance for families choosing care at home in Mumbai." />
+        <PageHeader title="Blog" subtitle="Practical guidance on surgical conditions and recovery from Satatva Health." />
         <Stack gap="1rem">
           {summaries.map(({ post, readMin }) => (
             <Card key={post.id} as="article">
@@ -73,9 +73,9 @@ export default function Blog({ posts, meta }: Props) {
                         fontWeight: 700,
                         padding: '0.2rem 0.55rem',
                         borderRadius: 999,
-                        background: '#fff2f4',
+                        background: '#f3eef8',
                         color: 'var(--color-primary-dark)',
-                        border: '1px solid rgba(200, 16, 46, 0.2)',
+                        border: '1px solid rgba(91, 45, 140, 0.2)',
                       }}
                     >
                       {t}

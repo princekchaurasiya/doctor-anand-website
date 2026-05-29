@@ -21,7 +21,7 @@ export function SiteHeader() {
   const { site } = page.props;
   const url = page.url;
   const phone = site?.phone ?? null;
-  const siteName = site?.site_name ?? 'Doconnect';
+  const siteName = site?.site_name ?? 'Satatva Health';
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {

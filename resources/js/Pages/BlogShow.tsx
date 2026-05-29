@@ -63,9 +63,18 @@ export default function BlogShow({ post }: Props) {
     toc.forEach((text, i) => {
       const el = h2s[i];
       if (el) {
-        el.id = slugifyHeading(text, i);
+        const id = slugifyHeading(text, i);
+        el.id = id;
+        el.style.scrollMarginTop = '5.5rem';
       }
     });
+
+    const hash = window.location.hash.replace(/^#/, '');
+    if (hash) {
+      requestAnimationFrame(() => {
+        document.getElementById(hash)?.scrollIntoView({ block: 'start' });
+      });
+    }
   }, [post.body, toc]);
 
   const articleJsonLd = {
@@ -76,11 +85,11 @@ export default function BlogShow({ post }: Props) {
     datePublished: post.published_at ?? undefined,
     author: {
       '@type': 'Organization',
-      name: site?.site_name ?? 'Doconnect',
+      name: site?.site_name ?? 'Satatva Health',
     },
     publisher: {
       '@type': 'Organization',
-      name: site?.site_name ?? 'Doconnect',
+      name: site?.site_name ?? 'Satatva Health',
     },
     image: ogImage ?? undefined,
     mainEntityOfPage: canonical,
@@ -143,7 +152,7 @@ export default function BlogShow({ post }: Props) {
                 }}
               />
             ) : null}
-            <header style={{ marginBottom: '1.25rem', paddingBottom: '1.25rem', borderBottom: '1px solid rgba(200, 16, 46, 0.12)' }}>
+            <header style={{ marginBottom: '1.25rem', paddingBottom: '1.25rem', borderBottom: '1px solid rgba(91, 45, 140, 0.12)' }}>
               <p style={{ margin: 0, color: 'var(--color-muted)', fontSize: '0.9rem', fontWeight: 600 }}>
                 {post.category ?? 'Healthcare'}
                 {publishedLabel ? ` · ${publishedLabel}` : ''}
@@ -176,9 +185,9 @@ export default function BlogShow({ post }: Props) {
                       fontWeight: 700,
                       padding: '0.25rem 0.65rem',
                       borderRadius: 999,
-                      background: '#fff2f4',
+                      background: '#f3eef8',
                       color: 'var(--color-primary-dark)',
-                      border: '1px solid rgba(200, 16, 46, 0.25)',
+                      border: '1px solid rgba(91, 45, 140, 0.25)',
                     }}
                   >
                     {t}

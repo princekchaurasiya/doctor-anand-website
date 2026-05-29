@@ -1,18 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 
 import { appPath } from '@/lib/paths';
-import {
-  Activity,
-  Ambulance,
-  Bandage,
-  Brain,
-  Droplet,
-  FlaskConical,
-  HeartPulse,
-  Stethoscope,
-  Syringe,
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { serviceIcon } from '@/lib/serviceIcons';
 
 import { Card } from '@/Components/ui/Card';
 import { PageHeader } from '@/Components/ui/PageHeader';
@@ -23,32 +12,36 @@ type Props = {
   services: Service[];
 };
 
-const SERVICE_ICONS: Record<string, LucideIcon> = {
-  'doctor-for-home-visit': Stethoscope,
-  'sugar-check': Droplet,
-  'dressing-wound-care': Bandage,
-  'urgent-care-at-home': Ambulance,
-  'iv-fluid-therapy': Syringe,
-  'nursing-care': HeartPulse,
-  'physiotherapy-at-home': Activity,
-  'home-lab-testing': FlaskConical,
-  'mental-health-support': Brain,
-};
-
 export default function Services({ services }: Props) {
   return (
     <MainLayout>
       <div className="container" style={{ padding: '1.5rem 1.25rem 3rem' }}>
-        <Head title="Doctor home visit services in Mumbai">
+        <Head title="Surgical services | Satatva Health Mumbai">
           <meta
             name="description"
-            content="Home visit doctor, follow-up care, and elderly-focused visits in Mumbai. Transparent pricing and physician-led care."
+            content="Piles, fistula, fissure, hernia, gallbladder, hydrocele, and general surgery by Dr. Anand S. Prajapati at Satatv Clinic, Kandivali West."
           />
         </Head>
-        <PageHeader title="Services in Mumbai" subtitle="Choose a service to learn how we support patients at home." />
+        <PageHeader
+          title="Our services"
+          subtitle="General and laser surgery at Satatv Clinic, Kandivali West — choose a service to learn more."
+        />
+        <img
+          src="/images/dr-anand/services-board.png"
+          alt="Surgical services board — Satatva Health"
+          loading="lazy"
+          style={{
+            width: '100%',
+            maxWidth: 560,
+            borderRadius: 'var(--radius)',
+            marginBottom: '1.5rem',
+            display: 'block',
+            boxShadow: 'var(--shadow)',
+          }}
+        />
         <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
           {services.map((s) => {
-            const Icon = SERVICE_ICONS[s.slug] ?? Stethoscope;
+            const Icon = serviceIcon(s.slug);
             return (
               <Card key={s.id} as="section">
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
@@ -59,7 +52,7 @@ export default function Services({ services }: Props) {
                       borderRadius: '50%',
                       display: 'grid',
                       placeItems: 'center',
-                      background: '#fff2f4',
+                      background: '#f3eef8',
                       color: 'var(--color-primary)',
                       flexShrink: 0,
                     }}

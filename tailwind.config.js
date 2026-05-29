@@ -9,10 +9,10 @@ export default {
         extend: {
             colors: {
                 primary: {
-                    DEFAULT: '#c8102e',
-                    dark: '#9b0d23',
+                    DEFAULT: '#5B2D8C',
+                    dark: '#4A2370',
                 },
-                accent: '#e63950',
+                accent: '#E8B923',
             },
             borderRadius: {
                 brand: '10px',

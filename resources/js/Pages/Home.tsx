@@ -1,25 +1,16 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 
 import { appPath } from '@/lib/paths';
+import { serviceIcon } from '@/lib/serviceIcons';
 import type { CSSProperties, ReactNode } from 'react';
 import {
-  Activity,
-  Ambulance,
-  Bandage,
-  Brain,
+  Award,
   CalendarCheck,
   ClipboardCheck,
-  ClipboardPlus,
-  Droplet,
-  FlaskConical,
-  HeartPulse,
-  Home as HomeIcon,
+  MapPin,
   PhoneCall,
   Stethoscope,
-  Syringe,
-  Truck,
-  UserCheck,
-  Zap,
+  Users,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -48,19 +39,7 @@ function asServices(v: Service[] | null | undefined): Service[] {
   return Array.isArray(v) ? v : [];
 }
 
-const SERVICE_ICONS: Record<string, LucideIcon> = {
-  'doctor-for-home-visit': Stethoscope,
-  'sugar-check': Droplet,
-  'dressing-wound-care': Bandage,
-  'urgent-care-at-home': Ambulance,
-  'iv-fluid-therapy': Syringe,
-  'nursing-care': HeartPulse,
-  'physiotherapy-at-home': Activity,
-  'home-lab-testing': FlaskConical,
-  'mental-health-support': Brain,
-};
-
-const STAT_ICONS: LucideIcon[] = [HomeIcon, UserCheck, ClipboardPlus, Zap];
+const STAT_ICONS: LucideIcon[] = [Award, Stethoscope, Users, ClipboardCheck];
 
 const iconCircle: CSSProperties = {
   width: 52,
@@ -68,13 +47,13 @@ const iconCircle: CSSProperties = {
   borderRadius: '50%',
   display: 'grid',
   placeItems: 'center',
-  background: '#fff2f4',
+  background: '#f3eef8',
   color: 'var(--color-primary)',
   flexShrink: 0,
 };
 
 function ServiceIcon({ slug }: { slug: string }) {
-  const Icon = SERVICE_ICONS[slug] ?? Stethoscope;
+  const Icon = serviceIcon(slug);
   return (
     <div style={iconCircle}>
       <Icon size={26} strokeWidth={2} aria-hidden />
@@ -89,6 +68,7 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
   const stats: SiteStat[] = Array.isArray(siteHome?.stats) ? siteHome.stats : [];
   const testimonials = Array.isArray(siteHome?.testimonials) ? siteHome.testimonials : [];
   const phone = site?.phone;
+  const siteName = site?.site_name ?? 'Satatva Health';
 
   if (!site) {
     return (
@@ -108,7 +88,7 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
             <div className="grid items-center gap-8 md:grid-cols-2 md:gap-10">
               <div className="order-2 flex flex-col md:order-1">
                 <h1 className="mb-3 mt-0 text-[clamp(1.75rem,4vw,2.35rem)] font-extrabold leading-tight text-white">
-                  {section.heading ?? site.site_name}
+                  {section.heading ?? siteName}
                 </h1>
                 {section.subheading ? (
                   <p className="mb-4 max-w-[52ch] text-[1.08rem] leading-relaxed text-white/95">{section.subheading}</p>
@@ -121,14 +101,14 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
                     href={`tel:${phone.replace(/\s/g, '')}`}
                     className="inline-block w-full rounded-full bg-white px-6 py-3.5 text-center text-base font-extrabold text-primary no-underline shadow-md transition hover:bg-white/95 sm:w-auto"
                   >
-                    Call now for home visit
+                    Call to book consultation
                   </a>
                 ) : null}
               </div>
               <div className="order-1 mx-auto w-full max-w-[420px] md:order-2 md:mx-0 md:justify-self-center">
                 <img
-                  src="/images/hero-doctors.jpg"
-                  alt="Medical team providing home healthcare"
+                  src="/images/dr-anand/clinic-card.png"
+                  alt="Dr. Anand S. Prajapati — Satatva Health, Satatv Clinic Kandivali West"
                   loading="eager"
                   className="block w-full rounded-brand shadow-[0_12px_40px_rgba(0,0,0,0.2)]"
                 />
@@ -141,10 +121,10 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
 
     if (section.section_key === 'how_it_works') {
       const steps = [
-        { Icon: PhoneCall, title: 'Call to book', text: 'Share location, symptoms, and urgency — we confirm timing and equipment.' },
-        { Icon: CalendarCheck, title: 'We confirm the visit', text: 'Straightforward scheduling with realistic Mumbai arrival windows.' },
-        { Icon: Truck, title: 'Clinician travels to you', text: 'Hospital-trained professionals with modern tools at your doorstep.' },
-        { Icon: ClipboardCheck, title: 'Plan & follow-up', text: 'Clear documentation, escalation when needed, and chronic care support.' },
+        { Icon: PhoneCall, title: 'Call to book', text: 'Share your symptoms and any reports — we schedule a clinic appointment at Satatv Clinic.' },
+        { Icon: CalendarCheck, title: 'Consultation', text: 'Dr. Prajapati examines you, explains the diagnosis, and discusses treatment options clearly.' },
+        { Icon: MapPin, title: 'Treatment at clinic', text: 'Procedures and surgery are performed at Satatv Clinic, Kandivali West — not at home.' },
+        { Icon: ClipboardCheck, title: 'Follow-up care', text: 'Structured post-operative reviews until you recover fully.' },
       ];
       return (
         <section key={section.id} className="section-light section-pad">
@@ -165,6 +145,29 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
                 );
               })}
             </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (section.section_key === 'capabilities') {
+      return (
+        <section key={section.id} className="section-white section-pad">
+          <div className="container">
+            <PageHeader title={section.heading ?? 'Conditions we treat'} subtitle={section.subheading ?? undefined} />
+            <img
+              src="/images/dr-anand/conditions-grid.png"
+              alt="Conditions treated at Satatva Health — piles, fistula, hernia, and more"
+              loading="lazy"
+              style={{
+                width: '100%',
+                borderRadius: 'var(--radius)',
+                marginBottom: '1.5rem',
+                display: 'block',
+                boxShadow: 'var(--shadow)',
+              }}
+            />
+            {section.body ? <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.65 }}>{section.body}</p> : null}
           </div>
         </section>
       );
@@ -208,7 +211,7 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
       {stats.length > 0 ? (
         <section className="section-light section-pad">
           <div className="container">
-            <PageHeader title="Doconnect in numbers" subtitle="Trusted home medical care across Mumbai." />
+            <PageHeader title={`${siteName} in numbers`} subtitle="Trusted surgical care at Satatv Clinic, Kandivali West." />
             <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', marginTop: '1rem' }}>
               {stats.map((s, i) => {
                 const Icon = STAT_ICONS[i % STAT_ICONS.length];
@@ -220,7 +223,7 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
                       padding: '1.15rem 1rem',
                       borderRadius: 'var(--radius)',
                       background: 'var(--color-surface)',
-                      border: '1px solid rgba(200, 16, 46, 0.1)',
+                      border: '1px solid rgba(91, 45, 140, 0.12)',
                       boxShadow: 'var(--shadow)',
                     }}
                   >
@@ -242,28 +245,26 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
       {svc.length > 0 ? (
         <section className="section-white section-pad">
           <div className="container">
-            <PageHeader title="Our services" subtitle="Hospital-quality support at home—booked with one call." />
+            <PageHeader title="Our services" subtitle="General and laser surgery at Satatv Clinic — book a consultation today." />
+            <img
+              src="/images/dr-anand/services-board.png"
+              alt="Surgical services at Satatva Health"
+              loading="lazy"
+              style={{
+                width: '100%',
+                maxWidth: 480,
+                borderRadius: 'var(--radius)',
+                marginBottom: '1.5rem',
+                display: 'block',
+                boxShadow: 'var(--shadow)',
+              }}
+            />
             <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
               {svc.map((s) => (
                 <Card key={s.id} as="section">
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
                     <ServiceIcon slug={s.slug} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      {s.image ? (
-                        <img
-                          src={s.image}
-                          alt=""
-                          loading="lazy"
-                          style={{
-                            width: '100%',
-                            maxHeight: 120,
-                            objectFit: 'cover',
-                            borderRadius: 'var(--radius)',
-                            marginBottom: '0.65rem',
-                            display: 'block',
-                          }}
-                        />
-                      ) : null}
                       <h3 style={{ marginTop: 0 }}>{s.title}</h3>
                       <p style={{ color: 'var(--color-muted)' }}>{s.short_description}</p>
                       <Link href={appPath(`/services/${s.slug}`)} style={{ fontWeight: 700 }}>
@@ -281,8 +282,8 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
       {testimonials.length > 0 ? (
         <section className="section-white section-pad">
           <div className="container">
-            <h2 style={{ marginTop: 0, fontSize: 'clamp(1.35rem, 3vw, 1.75rem)', color: 'var(--color-primary)' }}>What our clients say</h2>
-            <p style={{ color: 'var(--color-muted)', maxWidth: '60ch', marginBottom: '1.5rem' }}>Trusted home medical care across Mumbai.</p>
+            <h2 style={{ marginTop: 0, fontSize: 'clamp(1.35rem, 3vw, 1.75rem)', color: 'var(--color-primary)' }}>What our patients say</h2>
+            <p style={{ color: 'var(--color-muted)', maxWidth: '60ch', marginBottom: '1.5rem' }}>Trusted surgical care at Satatv Clinic, Kandivali West.</p>
             <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
               {testimonials.slice(0, 5).map((t, i) => (
                 <blockquote
@@ -292,7 +293,7 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
                     padding: '1.1rem 1.15rem',
                     borderRadius: 'var(--radius)',
                     background: 'var(--color-surface)',
-                    border: '1px solid rgba(200, 16, 46, 0.12)',
+                    border: '1px solid rgba(91, 45, 140, 0.12)',
                     boxShadow: 'var(--shadow)',
                   }}
                 >
@@ -306,16 +307,16 @@ export default function Home({ homepageSections, services, siteHome }: Props) {
       ) : null}
 
       <section className="section-light section-pad">
-          <div className="container" style={{ textAlign: 'center' }}>
-            <p style={{ margin: '0 0 0.75rem', color: 'var(--color-muted)' }}>Questions about home visits, nursing, or urgent care?</p>
-            <Link href="/faqs" style={{ fontWeight: 700, marginRight: '1.25rem' }}>
-              Read FAQs
-            </Link>
-            <Link href={appPath('/contact')} style={{ fontWeight: 700 }}>
-              Contact us
-            </Link>
-          </div>
-        </section>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <p style={{ margin: '0 0 0.75rem', color: 'var(--color-muted)' }}>Questions about surgery, appointments, or recovery?</p>
+          <Link href="/faqs" style={{ fontWeight: 700, marginRight: '1.25rem' }}>
+            Read FAQs
+          </Link>
+          <Link href={appPath('/contact')} style={{ fontWeight: 700 }}>
+            Contact us
+          </Link>
+        </div>
+      </section>
     </MainLayout>
   );
 }
